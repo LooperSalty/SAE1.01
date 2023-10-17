@@ -4,8 +4,8 @@
 #include <stdbool.h> 
 #include "sae.h"
 
-void nbrcacher() {
-    int n, nbrutilisateurs, tentatives = 0;
+int nbrcacher() {
+    int n, score, nbrutilisateurs, tentatives = 0;
     bool correct = false;
 
     srand(time(0));
@@ -15,7 +15,7 @@ void nbrcacher() {
     printf("Devinez un nombre entre 1 et 1000\n");
 
     while (tentatives < 10) { 
-        printf("Tentative %d : ", tentatives + 1);
+        printf("Tentative %d : ", ++tentatives);
         scanf("%d", &nbrutilisateurs); 
 
         if (nbrutilisateurs < 1 || nbrutilisateurs > 1000) {
@@ -28,14 +28,12 @@ void nbrcacher() {
             correct = true;
             break; 
         }
-
-        tentatives++;
     }
 
-    if (correct) {
-        printf("Félicitations, vous avez deviné le nombre en %d tentatives !\n", tentatives);
-    } else {
-        printf("Désolé, vous n'avez pas réussi à deviner le nombre. Le nombre était : %d\n", n);
-    }
+    if (correct)
+        score = tentatives;
+    else
+        score = 11;
 
+    return score;
 }
