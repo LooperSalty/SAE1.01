@@ -1,4 +1,4 @@
 # SAE1.01
 
 
-![Minegrub Preview "Screenshot"](resources/bernard.png)
+![Minegrub Preview "Screenshot"](bernard.jpg)
