@@ -41,6 +41,11 @@ void suite_mystere() {
 
     if ((fin - debut) <= 30 && entree == termes[3])
         score = (fin - debut);
+    printf("            _                                  \n");
+printf("__   _____ | |_ _ __ ___   ___  ___ ___  _ __ ___\n");
+printf("\\ \\ / / _ \\| __| '__/ _ \\ / __|/ __/ _ \\| '__/ _ \\\n");
+printf(" \\ V / (_) | |_| | |  __/ \\__ \\ (_| (_) | | |  __/\n");
+printf("  \\_/ \\___/ \\__|_|  \\___| |___/\\___\\___/|_|  \\___|\n");
 
-    printf("Votre score: %d\n", score);
+    printf("\n: %d\n", score);
 }

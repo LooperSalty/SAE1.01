@@ -68,10 +68,17 @@ int mastermind() {
 
     if (propositions[0] == voyelles[0] && propositions[1] == voyelles[1] && propositions[2] == voyelles[2] && propositions[3] == voyelles[3]) {
         victoire = true;
-        printf("Félicitations, vous avez trouvé la séquence correcte !\n");
+        printf("  _____    _ _      _ _        _   _\n");                
+printf(" |  ___|__| (_) ___(_) |_ __ _| |_(_) ___  _ __  ___\n");
+printf(" | |_ / _ \\ | |/ __| | __/ _` | __| |/ _ \\| '_ \\/ __|\n");
+printf(" |  _|  __/ | | (__| | || (_| | |_| | (_) | | | \\__ \\\n");
+printf(" |_|  \\___|_|_|\\___|_|\\__\\__,_|\\__|_|\\___/|_| |_|___/\n");
+        printf("\033[0;32m");
+        printf("\n, vous avez trouvé la séquence correcte !\n");
         break;  // Sortir de la boucle si l'utilisateur a gagné
     } else if (essaisRestants <= 0) {
-        printf("Vous avez épuisé tous vos essais. La séquence était : %c%c%c%c\n", voyelles[0], voyelles[1], voyelles[2], voyelles[3]);
+        printf("\033[0;31m");
+        printf("Vous avez épuisé tous vos essais. La séquence était : %c%c%c%c\n", voyelles[0], voyelles[1], voyelles[2], voyelles[3], "t'est éclater au sol");
         break;  // Sortir de la boucle si l'utilisateur a épuisé tous ses essais
     }
 } while (!victoire);
