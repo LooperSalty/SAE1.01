@@ -3,5 +3,7 @@
 
 // mystere.c
 void suite_mystere();
+void nbrcacher();
+int mastermind();
 
 #endif // SAE_H_
