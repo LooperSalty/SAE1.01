@@ -17,17 +17,16 @@ void genererSequence(char *voyelles) {
     }
 }
 
-char saisirVoyelle() {
+char saisirVoyelle(int i) {
     char rep;
-    do {
-        printf("\nSaisissez une voyelle en minuscules : ");
-        rep = getchar();
-        while (getchar() != '\n'); // Ajoutez cette ligne pour vider le tampon d'entrée
 
-        if (rep != 'a' && rep != 'e' && rep != 'i' && rep != 'o' && rep != 'u' && rep != 'y') {
-            printf("Saisie incorrecte, veuillez saisir une VOYELLE en MINUSCULES\n");
-        }
-    } while (rep != 'a' && rep != 'e' && rep != 'i' && rep != 'o' && rep != 'u' && rep != 'y');
+    do {
+        printf("\nSaisissez voyelle %d (minuscule) : ", i);
+        rep = getchar();
+        while (getchar() != '\n');
+    } while (rep != 'a' && rep != 'e' &&
+             rep != 'i' && rep != 'o' &&
+             rep != 'u' && rep != 'y');
     return rep;
 }
 
@@ -47,39 +46,31 @@ void comparerProposition(char voyelles[4], char propositions[4]) {
     }
 }
 
-int mastermind() {
-    char voyelles[4];
-    char propositions[4];
-    int essaisRestants = 10;
-    bool victoire = false;
+int mastermind(bool *victoire) {
+    char voyelles[4], propositions[4];
+    int tentatives;
+    *victoire = false;
 
     srand(time(NULL));
     genererSequence(voyelles);
 
-    printf("L'ordinateur a généré aléatoirement une suite de 4 voyelles.\nVous avez jusqu'à 10 essais pour retrouver cette suite.\n\n");
+    puts("L'ordinateur a généré aléatoirement une suite de 4 voyelles.\n"
+         "Vous avez jusqu'à 10 essais pour retrouver cette suite.\n");
 
-    do {
-    for (int i = 0; i < 4; i++) {
-        propositions[i] = saisirVoyelle();
+    for (tentatives = 0; !*victoire && tentatives < 10; ++tentatives) {
+        for (int i = 0; i < 4; i++) {
+            propositions[i] = saisirVoyelle(i+1);
+        }
+
+        comparerProposition(voyelles, propositions);
+
+        if (propositions[0] == voyelles[0] &&
+            propositions[1] == voyelles[1] &&
+            propositions[2] == voyelles[2] &&
+            propositions[3] == voyelles[3]) {
+            *victoire = true;
+        }
     }
 
-    comparerProposition(voyelles, propositions);
-    essaisRestants--;
-
-    if (propositions[0] == voyelles[0] && propositions[1] == voyelles[1] && propositions[2] == voyelles[2] && propositions[3] == voyelles[3]) {
-        victoire = true;
-        printf("  _____    _ _      _ _        _   _\n");                
-printf(" |  ___|__| (_) ___(_) |_ __ _| |_(_) ___  _ __  ___\n");
-printf(" | |_ / _ \\ | |/ __| | __/ _` | __| |/ _ \\| '_ \\/ __|\n");
-printf(" |  _|  __/ | | (__| | || (_| | |_| | (_) | | | \\__ \\\n");
-printf(" |_|  \\___|_|_|\\___|_|\\__\\__,_|\\__|_|\\___/|_| |_|___/\n");
-        printf("\033[0;32m");
-        printf("\n, vous avez trouvé la séquence correcte !\n");
-        break;  // Sortir de la boucle si l'utilisateur a gagné
-    } else if (essaisRestants <= 0) {
-        printf("\033[0;31m");
-        printf("Vous avez épuisé tous vos essais. La séquence était : %c%c%c%c\n", voyelles[0], voyelles[1], voyelles[2], voyelles[3], "t'est éclater au sol");
-        break;  // Sortir de la boucle si l'utilisateur a épuisé tous ses essais
-    }
-} while (!victoire);
+    return tentatives + 1;
 }

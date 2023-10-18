@@ -9,5 +9,5 @@ $(BINFILE): $(CFILES)
 clean:
 	rm $(BINFILE)
 
-run:
+run: $(BINFILE)
 	./$(BINFILE)

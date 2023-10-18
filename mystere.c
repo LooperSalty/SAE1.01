@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -16,7 +17,8 @@ static int myst_suite(unsigned n, int a, int b, int c) {
         return a * myst_suite(n - 1, a, b, c) + b;
 }
 
-void suite_mystere() {
+int suite_mystere(bool *victoire) {
+    *victoire = false;
     srand(time(NULL));
 
     // Variables pour mesurer le temps
@@ -39,13 +41,10 @@ void suite_mystere() {
     scanf("%d", &entree);
     fin = time(NULL);
 
-    if ((fin - debut) <= 30 && entree == termes[3])
+    if ((fin - debut) <= 30 && entree == termes[3]) {
         score = (fin - debut);
-    printf("            _                                  \n");
-printf("__   _____ | |_ _ __ ___   ___  ___ ___  _ __ ___\n");
-printf("\\ \\ / / _ \\| __| '__/ _ \\ / __|/ __/ _ \\| '__/ _ \\\n");
-printf(" \\ V / (_) | |_| | |  __/ \\__ \\ (_| (_) | | |  __/\n");
-printf("  \\_/ \\___/ \\__|_|  \\___| |___/\\___\\___/|_|  \\___|\n");
+        *victoire = true;
+    }
 
-    printf("\n: %d\n", score);
+    return score;
 }
