@@ -1,183 +1,102 @@
-# sae.py
-import random
-import time
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QTextEdit, QLineEdit
+from PyQt5.QtCore import QObject, pyqtSignal
+import sys
+from cache import CacheGame
+from mastermind import mastermind_play
+from mystere import mystere
 
-def genererSequence():
-    alphabet = ['a', 'e', 'i', 'o', 'u', 'y']
-    indicesUtilises = [0] * 6
-    voyelles = []
 
-    for _ in range(4):
-        index = random.randint(0, 5)
-        while indicesUtilises[index] == 1:
-            index = random.randint(0, 5)
-        indicesUtilises[index] = 1
-        voyelles.append(alphabet[index])
+class GameWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
-    return voyelles
+        self.cache_game = CacheGame()
 
-def saisirVoyelle(i):
-    while True:
-        rep = input(f"Saisissez voyelle {i} (minuscule): ")
-        if rep in ['a', 'e', 'i', 'o', 'u', 'y']:
-            return rep
+    def initUI(self):
+        self.setWindowTitle("Jeux")
+        self.setGeometry(100, 100, 400, 300)
 
-def comparerProposition(voyelles, propositions):
-    for i in range(4):
-        if propositions[i] == voyelles[i]:
-            print("\nUne voyelle est correcte et bien placée")
-        else:
-            for j in range(4):
-                if propositions[i] == voyelles[j] and i != j:
-                    print("\nUne voyelle est correcte mais mal placée")
-                    break
+        layout = QVBoxLayout()
 
-def mastermind():
-    victoire = False
-    voyelles = genererSequence()
+        self.result_text = QTextEdit(self)
+        self.result_text.setReadOnly(True)
+        layout.addWidget(self.result_text)
 
-    print("L'ordinateur a généré aléatoirement une suite de 4 voyelles.")
-    print("Vous avez jusqu'à 10 essais pour retrouver cette suite.\n")
+        self.game_buttons = []
 
-    for tentatives in range(10):
-        propositions = [saisirVoyelle(i + 1) for i in range(4)]
-        comparerProposition(voyelles, propositions)
+        self.input_field = QLineEdit(self)
+        layout.addWidget(self.input_field)
 
-        if propositions == voyelles:
-            victoire = True
-            break
+        submit_button = QPushButton("Soumettre", self)
+        submit_button.clicked.connect(self.submit_number)
+        layout.addWidget(submit_button)
 
-    return tentatives + 1
+        for game_name in ["Suite mystère", "Nombre caché", "Mastermind"]:
+            button = QPushButton(game_name, self)
+            button.clicked.connect(self.run_game)
+            layout.addWidget(button)
+            self.game_buttons.append(button)
 
-def myst_coeff():
-    return random.randint(1, 10)
+        self.setLayout(layout)
 
-def myst_suite(n, a, b, c):
-    if n == 0:
-        return c
-    else:
-        return a * myst_suite(n - 1, a, b, c) + b
-
-def mystere():
-    victoire = False
-    random.seed(time.time())
-
-    a, b, c = myst_coeff(), myst_coeff(), myst_coeff()
-    termes = [myst_suite(i, a, b, c) for i in range(4)]
-
-    print(f"Premiers termes de la suite: {termes[0]} {termes[1]} {termes[2]}")
-    entree = int(input("Entrer le 4ème terme: "))
-
-    debut = time.time()
-    if entree == termes[3] and (time.time() - debut) <= 30:
-        victoire = True
-
-    score = (time.time() - debut) if victoire else 31
-    return score
-
-def cacher():
-    n = random.randint(1, 1000)
-    score = 0
-    tentatives = 0
-    correct = False
-
-    phrases = [
-        "lâche pas les études",
-        "toujours aussi nul",
-        "encore ça fait beaucoup là non ?",
-        "aie coup dur pour guillaume",
-        "T'es éclaté au sol !"
-    ]
-
-    print("Devinez un nombre entre 1 et 1000")
-
-    while tentatives < 10:
-        indice = random.randint(0, 4)
-        tentatives += 1
-        nbrutilisateurs = int(input(f"Tentative {tentatives} : "))
-
-        if nbrutilisateurs < 1 or nbrutilisateurs > 1000:
-            print("Le nombre doit être entre 1 et 1000. Réessayez.")
-            print(phrases[indice])
-        elif nbrutilisateurs < n:
-            print("Le nombre à deviner est plus grand.")
-            print(phrases[indice])
-        elif nbrutilisateurs > n:
-            print("Le nombre à deviner est plus petit.")
-            print(phrases[indice])
-        else:
-            correct = True
-            break
-
-    score = tentatives if correct else 11
-    return score
-
-def jeu_gagne(score):
-    print("\n")
-    print("  ____                               _ ")
-    print(" / ___| __ _  __ _ _ __   ___ _ __  | |")
-    print("| |  _ / _` |/ _` | '_ \\ / _ \\ '__| | |")
-    print("| |_| | (_| | (_| | | | |  __/ |    |_|")
-    print(" \\____|\\__,_|\\__, |_| |_|\\___|_|    (_)")
-    print("             |___/\n")
-    print("\033[1;32m\n avec un score de {}\n\033[0m".format(score))
-
-def jeu_perdu(score):
-    print("\n")
-    print("                    _         _ ")
-    print(" _ __   ___ _ __ __| |_   _  | |")
-    print("| '_ \\ / _ \\ '__/ _` | | | | | |")
-    print("| |_) |  __/ | | (_| | |_| | |_|")
-    print("| .__/ \\___|_|  \\__,_|\\__,_| (_)")
-    print("|_|                              ")
-    print("\n")
-    print("\033[1;31m\nAie... Coup dur... Score: {}\n\033[0m".format(score))
-
-def main():
-    rejouer = True
-    print("\n")
-    print("  _     _                                      \n")
-    print(" | |__ (_) ___ _ ____   _____ _ __  _   _  ___ \n")
-    print(" | '_ \\| |/ _ \\ '_ \\ \\ / / _ \\ '_ \\| | | |/ _ \\\n")
-    print(" | |_) | |  __/ | | \\ V /  __/ | | | |_| |  __/\n")
-    print(" |_.__/|_|\\___|_| |_|\_/ \\___|_| |_|\\__,_|\\___|\n")
-    print("\n")
-
-    while rejouer:
-        print("NOTRE SUPER JEU!!!1!\n"
-              " 1 - Suite mystere\n"
-              " 2 - Nombre cache\n"
-              " 3 - Mastermind")
-
-        numero_jeu = 0
-        while numero_jeu < 1 or numero_jeu > 3:
-            numero_jeu = int(input("Entrer le numero du jeu [1-3]: "))
-
-        score = 0
-        victoire = False
-
-        if numero_jeu == 1:
-            score = mystere()
-        elif numero_jeu == 2:
-            score = cacher()
-        elif numero_jeu == 3:
-            score = mastermind()
-
-        if victoire:
-            jeu_gagne(score)
-        else:
-            jeu_perdu(score)
-
-        choix = ""
-        while choix != 'o' and choix != 'n':
-            choix = input("Voulez-vous rejouer ? (o/n)\n").lower()
-            if choix == 'o':
-                print("C'est parti, on rejoue !\n")
-                rejouer = True
-            elif choix == 'n':
-                rejouer = False
+    def run_game(self):
+        sender = self.sender()
+        if sender in self.game_buttons:
+            game_name = sender.text()
+            self.result_text.clear()
+            if game_name == "Nombre caché":
+                self.cache_game.tentatives = 0
+                self.result_text.append(f"Vous avez lancé le jeu : {game_name}")
+                self.result_text.append("Devinez un nombre entre 1 et 1000")
+            elif game_name == "Mastermind":
+                self.play_mastermind()
+            elif game_name == "Suite mystère":
+                self.play_suite_mystere()
+            elif game_name == "Mystère":
+                self.play_mystere()
             else:
-                print("Saisie invalide. Veuillez choisir 'o' pour rejouer ou 'n' pour ne pas rejouer.\n")
+                self.result_text.append(f"Vous avez lancé le jeu : {game_name}")
+                
 
-if __name__ == "__main__":
-    main()
+    def submit_number(self):
+        user_input = self.input_field.text()
+        if user_input.isdigit():
+            number = int(user_input)
+            result = self.cache_game.guess_number(number)
+            self.result_text.append(result)
+        else:
+            self.result_text.append("Veuillez entrer un nombre valide.")
+
+    def play_mastermind(self):
+        self.result_text.append("Vous avez lancé le jeu : Mastermind")
+        self.result_text.append("Vous devez deviner une suite de 4 voyelles.")
+        self.result_text.append("Les voyelles possibles sont : a, e, i, o, u, y.")
+        self.result_text.append("Vous avez jusqu'à 10 essais pour retrouver la suite.")
+
+        tentatives = mastermind_play(self)
+
+        if tentatives <= 10:
+            self.result_text.append(f"Bravo, vous avez trouvé la suite en {tentatives} essais!")
+        else:
+            self.result_text.append("Désolé, vous n'avez pas trouvé la suite en 10 essais.")
+            
+     
+    def play_mystere(self):
+        self.result_text.append("Vous avez lancé le jeu : Mystère")
+        self.result_text.append("Vous devez résoudre le mystère de la suite de nombres.")
+        self.result_text.append("Entrez le 4ème terme de la suite dans les 30 secondes.")
+
+        score = mystere()
+
+        if score <= 30:
+            self.result_text.append(f"Bravo, vous avez résolu le mystère en {score} secondes!")
+        else:
+            self.result_text.append("Désolé, le temps est écoulé ou la réponse est incorrecte.")
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = GameWindow()
+    window.show()
+    sys.exit(app.exec_())

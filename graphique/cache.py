@@ -1,10 +1,11 @@
 import random
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal
 
-class CacheGame:
+class CacheGame(QObject):
     game_over_signal = pyqtSignal(int)
 
     def __init__(self):
+        super().__init__()
         self.n = random.randint(1, 1000)
         self.score = 0
         self.tentatives = 0
@@ -20,6 +21,10 @@ class CacheGame:
     def guess_number(self, nbrutilisateurs):
         self.tentatives += 1
 
+        if self.tentatives >= 10:
+            self.game_over_signal.emit(self.score)
+            return f"Le jeu est terminé. Votre score est : {self.score}"
+
         if nbrutilisateurs < 1 or nbrutilisateurs > 1000:
             return f"Le nombre doit être entre 1 et 1000. Réessayez.\n{self.phrases[random.randint(0, 4)]}"
         elif nbrutilisateurs < self.n:
@@ -28,7 +33,12 @@ class CacheGame:
             return f"Le nombre à deviner est plus petit.\n{self.phrases[random.randint(0, 4)]}"
         else:
             self.correct = True
-            return "Vous avez deviné le nombre !"
+            self.tentatives = 0
+            self.score = self.tentatives
+            self.game_over_signal.emit(self.score)
+            return "Vous avez deviné le nombre!"
+        
+    
 
 
     def play_game(self, nbrutilisateurs):
@@ -41,6 +51,10 @@ class CacheGame:
 
         return "Le jeu est terminé. Votre score est : {self.score}"
 
+
+    def handle_game_over(self, score):
+        self.result_text.append(f"Le jeu est terminé. Votre score est : {score}")
+        
 if __name__ == "__main__":
     cache_game = CacheGame()
     while not cache_game.correct and cache_game.tentatives < 10:
@@ -50,3 +64,5 @@ if __name__ == "__main__":
             print(result)
         except ValueError:
             print("Veuillez entrer un nombre valide.")
+            
+            
