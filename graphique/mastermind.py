@@ -1,6 +1,5 @@
-# mastermind.py
 import random
-from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QInputDialog
 
 def genererSequence():
     alphabet = ['a', 'e', 'i', 'o', 'u', 'y']
@@ -16,13 +15,23 @@ def genererSequence():
 
     return voyelles
 
-def mastermind_play(self):
-    def saisirVoyelle(i):
-        while True:
-            rep = input(f"Saisissez voyelle {i} (minuscule): ")
-            if rep in ['a', 'e', 'i', 'o', 'u', 'y']:
-                return rep
+def saisirVoyelle(i):
+    while True:
+        rep, ok = QInputDialog.getText(None, f'Saisissez voyelle {i}', f'Entrez une voyelle {i} (minuscule):')
+        if ok and rep in ['a', 'e', 'i', 'o', 'u', 'y']:
+            return rep
 
+def comparerProposition(voyelles, propositions):
+    for i in range(4):
+        if propositions[i] == voyelles[i]:
+            print("\nUne voyelle est correcte et bien placée")
+        else:
+            for j in range(4):
+                if propositions[i] == voyelles[j] and i != j:
+                    print("\nUne voyelle est correcte mais mal placée")
+                    break
+
+def mastermind_play():
     victoire = False
     voyelles = genererSequence()
     tentatives = 0
@@ -36,4 +45,3 @@ def mastermind_play(self):
             break
 
     return tentatives + 1
-

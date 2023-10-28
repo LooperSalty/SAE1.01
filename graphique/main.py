@@ -53,8 +53,6 @@ class GameWindow(QWidget):
             elif game_name == "Mastermind":
                 self.play_mastermind()
             elif game_name == "Suite mystère":
-                self.play_suite_mystere()
-            elif game_name == "Mystère":
                 self.play_mystere()
             else:
                 self.result_text.append(f"Vous avez lancé le jeu : {game_name}")
