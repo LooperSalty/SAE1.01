@@ -1,17 +1,19 @@
-from PyQt5.QtWidgets import QLineEdit, QApplication, QVBoxLayout, QWidget, QPushButton, QTextEdit
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QPushButton, QLineEdit, QInputDialog
+from PyQt5.QtCore import QTimer
 import sys
 from mastermind import mastermind_play
 from mystere import mystere
 from cache import CacheGame
+import random
 
 class GameWindow(QWidget):
     def __init__(self):
       super().__init__()
       self.initUI()
       self.cache_game = None
-
+      self.mystere_timer = QTimer()
+      self.mystere_timer.timeout.connect(self.check_mystere)
         
-
     def initUI(self):
         self.setWindowTitle("Jeux")
         self.setGeometry(100, 100, 400, 300)
@@ -55,15 +57,6 @@ class GameWindow(QWidget):
             else:
                 self.result_text.append(f"Vous avez lancé le jeu : {game_name}")
 
-    def submit_number(self):
-        user_input = self.input_field.text()
-        if user_input.isdigit() and self.cache_game:
-            number = int(user_input)
-            result = self.cache_game.guess_number(number)
-            self.result_text.append(result)
-        else:
-            self.result_text.append("Veuillez entrer un nombre valide ou sélectionner le jeu Nombre caché.")
-
     def play_mastermind(self):
         self.result_text.append("Vous avez lancé le jeu : Mastermind")
         self.result_text.append("Vous devez deviner une suite de 4 voyelles.")
@@ -77,17 +70,50 @@ class GameWindow(QWidget):
         else:
             self.result_text.append("Désolé, vous n'avez pas trouvé la suite en 10 essais.")
 
+    def submit_number(self):
+        user_input = self.input_field.text()
+        if user_input.isdigit() and self.cache_game:
+            number = int(user_input)
+            result = self.cache_game.guess_number(number)
+            self.result_text.append(result)
+        else:
+            self.result_text.append("Veuillez entrer un nombre valide ou sélectionner le jeu Nombre caché.")
+            
     def play_mystere(self):
-        self.result_text.append("Vous avez lancé le jeu : Mystère")
-        self.result_text.append("Vous devez résoudre le mystère de la suite de nombres.")
-        self.result_text.append("Entrez le 4ème terme de la suite dans les 30 secondes.")
+        a, b, c = self.myst_coeff(), self.myst_coeff(), self.myst_coeff()
+        termes = [self.myst_suite(i, a, b, c) for i in range(4)]
 
-        score = mystere()
+        self.result_text.append(f"Premiers termes de la suite: {termes[0]} {termes[1]} {termes[2]}")
 
-        if score <= 30:
-            self.result_text.append(f"Bravo, vous avez résolu le mystère en {score} secondes!")
+        self.mystere_value = termes[3]
+
+        self.mystere_timer.start(30000)
+
+        # Déplacez la désactivation de la zone de saisie ici
+        self.input_field.setDisabled(True)
+
+    def myst_coeff(self):
+        return random.randint(1, 10)
+
+    def myst_suite(self, n, a, b, c):
+        if n == 0:
+            return c
+        else:
+            return a * self.myst_suite(n - 1, a, b, c) + b
+
+    def check_mystere(self):
+        self.mystere_timer.stop()
+        user_input, ok = QInputDialog.getInt(self, "Suite Mystère", "Entrez le 4ème terme de la suite:")
+
+        if ok and user_input == self.mystere_value:
+            self.result_text.append("Bravo, vous avez résolu le mystère en temps!")
         else:
             self.result_text.append("Désolé, le temps est écoulé ou la réponse est incorrecte.")
+
+        # Réactivez la zone de saisie pour de nouvelles entrées
+        self.input_field.setDisabled(False)
+                
+    
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
