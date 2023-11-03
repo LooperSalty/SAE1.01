@@ -89,8 +89,20 @@ class GameWindow(QWidget):
 
         self.mystere_timer.start(30000)
 
-        # Déplacez la désactivation de la zone de saisie ici
-        self.input_field.setDisabled(True)
+        # Utilisez une boîte de dialogue d'entrée pour obtenir le 4ème terme de la suite
+        user_input, ok = QInputDialog.getInt(self, "Suite Mystère", "Entrez le 4ème terme de la suite:")
+
+        if ok:
+            if user_input == self.mystere_value:
+                self.result_text.append("Bravo, vous avez résolu le mystère en temps!")
+            else:
+                self.result_text.append("Désolé, le temps est écoulé ou la réponse est incorrecte.")
+        else:
+            self.result_text.append("Vous n'avez pas saisi de valeur valide.")
+
+        # Réactivez la zone de saisie pour de nouvelles entrées
+        self.input_field.setDisabled(False)
+       
 
     def myst_coeff(self):
         return random.randint(1, 10)
