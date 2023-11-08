@@ -74,3 +74,4 @@ int mastermind(bool *victoire) {
 
     return tentatives + 1;
 }
+    

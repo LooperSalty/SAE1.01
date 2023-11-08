@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "sae.h"
 
-static void jeu_gagne(int score) {
+void jeu_gagne(int score) {
     printf("\n");
     printf("  ____                               _ \n");
     printf(" / ___| __ _  __ _ _ __   ___ _ __  | |\n");
@@ -14,7 +14,7 @@ static void jeu_gagne(int score) {
     printf("\033[1;32m\n avec un score de %d\n033[0m", score);
 }
 
-static void jeu_perdu(int score) {
+void jeu_perdu(int score) {
     printf("\n");
     printf("                    _         _ \n");
     printf(" _ __   ___ _ __ __| |_   _  | |\n");
@@ -28,6 +28,8 @@ static void jeu_perdu(int score) {
 
 int main() {
     bool rejouer;
+    char tampon[32];
+
     printf("\n");
     printf("  _     _                                      \n");
     printf(" | |__ (_) ___ _ ____   _____ _ __  _   _  ___ \n");
@@ -44,9 +46,9 @@ int main() {
         int numero_jeu = 0;
         while (numero_jeu < 1 || numero_jeu > 3) {
             printf("Entrer le numero du jeu [1-3]: ");
-            scanf("%d", &numero_jeu);
+            fgets(tampon, 16, stdin);
+            sscanf(tampon, "%d", &numero_jeu);
         }
-        while (getchar() != '\n');
 
         int score;
         bool victoire;

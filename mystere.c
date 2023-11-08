@@ -5,12 +5,12 @@
 #include "sae.h"
 
 // Donne un coefficient aleatoire entre 1 et 10
-static int myst_coeff() {
+int myst_coeff() {
     return rand() % 10 + 1;
 }
 
 // Calcule le n-ieme terme de la suite mystere
-static int myst_suite(unsigned n, int a, int b, int c) {
+int myst_suite(unsigned n, int a, int b, int c) {
     if (n == 0)
         return c;
     else
@@ -27,21 +27,20 @@ int suite_mystere(bool *victoire) {
     // Coefficients mystere
     int a = myst_coeff(), b = myst_coeff(), c = myst_coeff();
 
-    // 4 premiers termes de la suite
-    int termes[4];
-    for (int i = 0; i < 4; ++i)
-        termes[i] = myst_suite(i, a, b, c);
+    int terme;
 
     // Saisie utilisateur, on mesure le temps qu'il prend
     int entree, score = 31;
     printf("Premiers termes de la suite: %d %d %d\nEntrer le 4eme terme: ",
-           termes[0], termes[1], termes[2]);
+           myst_suite(0, a, b, c),
+           myst_suite(1, a, b, c),
+           myst_suite(2, a, b, c));
 
     debut = time(NULL);
-    scanf("%d", &entree);
+    while (!scanf("%d", &entree) && difftime(debut, time(NULL)) < 30);
     fin = time(NULL);
 
-    if ((fin - debut) <= 30 && entree == termes[3]) {
+    if ((fin - debut) <= 30 && entree == terme) {
         score = (fin - debut);
         *victoire = true;
     }
