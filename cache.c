@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "sae.h"
+#include "commun.h"
 
 #define NB_PHRASES 3
 

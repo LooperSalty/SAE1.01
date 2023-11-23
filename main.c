@@ -7,7 +7,10 @@
 ** Programme principal.
 */
 #include <stdio.h>
-#include "sae.h"
+#include "mystere.h"
+#include "mastermind.h"
+#include "cache.h"
+#include "commun.h"
 
 /*
 ** jeu_gagne: Le joueur a gagne

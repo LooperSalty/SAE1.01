@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "sae.h"
+#include "commun.h"
 
 /*
 ** myst_coeff: donne un coefficient aleatoire entre 1 et 10

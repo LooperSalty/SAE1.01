@@ -72,6 +72,22 @@ void mm_compare(char voyelles[4], char propositions[4]) {
     }
 }
 
+// Version alternative de la function mm_compare
+void mm_compare2(char voyelles[5], char propositions[5]) {
+    for (int i = 0; voyelles[i] && propositions[i]; i++) {
+        if (propositions[i] == voyelles[i]) {
+            printf("\nUne voyelle est correcte et bien placée\n");
+        } else {
+            for (int j = 0; j < 4; j++) {
+                if (propositions[i] == voyelles[j] && i != j) {
+                    printf("\nUne voyelle est correcte mais mal placée\n");
+                    break;
+                }
+            }
+        }
+    }
+}
+
 /*
 ** mastermind: programme principal du jeu
 **
@@ -80,11 +96,13 @@ void mm_compare(char voyelles[4], char propositions[4]) {
 */
 int mastermind(int *victoire) {
     char voyelles[4], propositions[4];
+    // char voyelles[5], propositions[5];
     int tentatives;
     *victoire = 0;
 
     srand(time(NULL));
     mm_generer_sequence(voyelles);
+    // voyelles[4] = 0;
 
     puts("L'ordinateur a généré aléatoirement une suite de 4 voyelles uniques.\n"
          "Vous avez jusqu'à 10 essais pour retrouver cette suite.\n");
@@ -94,8 +112,13 @@ int mastermind(int *victoire) {
         for (int i = 0; i < 4; i++) {
             propositions[i] = mm_lire_voyelle(i+1);
         }
+	/*
+	scanf("%4s", propositions);
+	propositions[4] = 0;
+	*/
 
         mm_compare(voyelles, propositions);
+        // mm_compare2(voyelles, propositions);
 
         if (propositions[0] == voyelles[0] &&
             propositions[1] == voyelles[1] &&
