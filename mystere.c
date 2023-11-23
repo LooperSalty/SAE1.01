@@ -62,8 +62,7 @@ int suite_mystere(int *victoire) {
            myst_suite(2, a, b, c));
 
     debut = time(NULL);
-    while ((fin = time(NULL) - debut) < 30 &&
-           (entree = lire_nombre("Entrer le 4eme terme:")) < 0);
+    entree = lire_nombre("Entrer le 4eme terme:");
     fin = time(NULL) - debut;
 
     if (fin <= 30 && entree == terme) {
