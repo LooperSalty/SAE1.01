@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QPushButton, QLineEdit, QInputDialog
 from PyQt5.QtCore import QTimer
 import sys
@@ -89,7 +90,6 @@ class GameWindow(QWidget):
 
         self.mystere_timer.start(30000)
 
-        
         user_input, ok = QInputDialog.getInt(self, "Suite Mystère", "Entrez le 4ème terme de la suite:")
 
         if ok:
