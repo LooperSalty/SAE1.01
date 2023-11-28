@@ -1,5 +1,7 @@
 # SAE1.01
 
+![berner](bernard.jpg)
+
 La SAE 1.01 est une serie de petits jeux ecrits en C et fonctionnant avec une
 interface console (CLI). Dans ce dossier est inclus la source du projet mais
 egalement un executable Linux x86-64 compile statiquement pour maximiser la
